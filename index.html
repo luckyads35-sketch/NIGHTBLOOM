@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="noir">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>NIGHTBLOOM MERCANTILE · withered flora · nocturnal goods</title>
+  <!-- Typography: decayed serif + thorny sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* THEME: NOIR (midnight & wilted petals) */
+    :root[data-theme="noir"] {
+      --bg: #05070a;
+      --surface: #0f1219;
+      --surface-elevated: #1a1f2a;
+      --text: #e0dfe5;
+      --text-soft: #a6a2b0;
+      --text-muted: #4a4754;
+      --accent: #7a5b6e;
+      --accent-glow: #b28aa2;
+      --accent-deep: #5e4152;
+      --accent-subtle: #2e2330;
+      --border-light: #382e3b;
+      --shadow-sm: 0 12px 28px -10px rgba(0,0,0,0.9);
+      --shadow-lg: 0 25px 45px -12px rgba(0,0,0,1);
+      --transition: 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      --radius-card: 32px 8px 32px 8px;
+      --grid-gap: 2rem;
+      --font-serif: 'Cormorant Garamond', serif;
+    }
+
+    /* second theme: "wilt" — pale decay & dried herbarium */
+    :root[data-theme="wilt"] {
+      --bg: #f2ede4;
+      --surface: #fffcf7;
+      --surface-elevated: #faf5ec;
+      --text: #2f2a24;
+      --text-soft: #8d7e6f;
+      --text-muted: #cfc2b3;
+      --accent: #8f6a7c;
+      --accent-glow: #b88da8;
+      --accent-deep: #7a5068;
+      --accent-subtle: #e8dadf;
+      --border-light: #e1d1cf;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+      font-weight: 400;
+      line-height: 1.45;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--surface);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 10px;
+    }
+
+    /* header — nocturnal threshold */
+    .night-header {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      background: rgba(5, 7, 10, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--accent);
+      transition: var(--transition);
+    }
+    [data-theme="wilt"] .night-header {
+      background: rgba(242, 237, 228, 0.96);
+      border-bottom-color: var(--accent-glow);
+    }
+
+    .nav-wilt {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.7rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .brand-night {
+      font-family: var(--font-serif);
+      font-size: 1.7rem;
+      font-weight: 300;
+      letter-spacing: 1px;
+      color: var(--accent-glow);
+      text-transform: lowercase;
+      font-style: italic;
+      border-left: 3px solid var(--accent);
+      padding-left: 15px;
+    }
+    .brand-night small {
+      font-size: 0.45rem;
+      font-weight: 400;
+      letter-spacing: 4px;
+      margin-left: 8px;
+      font-style: normal;
+      color: var(--text-soft);
+    }
+
+    .nav-night-links {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      font-weight: 500;
+      letter-spacing: 2px;
+    }
+    .nav-night-links a {
+      color: var(--text-soft);
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .nav-night-links a:hover {
+      color: var(--accent-glow);
+      text-decoration: underline;
+      text-underline-offset: 6px;
+    }
+
+    .night-utils {
+      display: flex;
+      gap: 1.6rem;
+      align-items: center;
+    }
+    #themeToggleNight {
+      background: var(--accent-subtle);
+      border: none;
+      padding: 5px 14px;
+      font-size: 0.65rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text);
+      font-family: monospace;
+      border-radius: 40px;
+    }
+    .night-cart {
+      position: relative;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+    .cart-count-night {
+      background: var(--accent);
+      color: #05070a;
+      font-size: 0.55rem;
+      font-weight: 800;
+      border-radius: 30px;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: -8px;
+      right: -14px;
+    }
+
+    /* hero — nocturnal garden */
+    .hero-night {
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      background-image: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=2074&auto=format&fit=crop');
+      background-size: cover;
+      background-position: 50% 35%;
+    }
+    .hero-night::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 30%, #05070acc, #05070aee);
+      z-index: 1;
+    }
+    .hero-night-content {
+      position: relative;
+      z-index: 2;
+      max-width: 620px;
+      padding: 0 6%;
+    }
+    .hero-night-badge {
+      font-size: 0.55rem;
+      letter-spacing: 6px;
+      font-weight: 400;
+      margin-bottom: 1rem;
+      color: var(--accent-glow);
+      border-left: 4px solid var(--accent);
+      padding-left: 14px;
+      font-family: monospace;
+    }
+    .hero-night-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 10vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.0;
+      margin-bottom: 0.8rem;
+      color: #f2ede8;
+      letter-spacing: -0.5px;
+      font-style: italic;
+    }
+    .hero-night-offer {
+      font-size: 0.65rem;
+      font-weight: 400;
+      margin-bottom: 2rem;
+      background: rgba(0, 0, 0, 0.6);
+      display: inline-block;
+      padding: 0.4rem 1.2rem;
+      backdrop-filter: blur(4px);
+      font-family: monospace;
+      border-radius: 20px;
+    }
+
+    .btn-night {
+      background: var(--accent);
+      border: none;
+      padding: 0.8rem 2.2rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-block;
+      text-decoration: none;
+      color: #0a0c12;
+      font-family: monospace;
+      border-radius: 40px;
+    }
+    .btn-night:hover {
+      background: var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    /* collection header */
+    .night-collection {
+      max-width: 1440px;
+      margin: 3rem auto 0.5rem auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      border-bottom: 1px dashed var(--accent);
+      padding-bottom: 0.7rem;
+    }
+    .night-collection h2 {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 300;
+      font-style: italic;
+    }
+    .night-collection p {
+      color: var(--accent-glow);
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      font-family: monospace;
+    }
+
+    /* product grid — wilt archive */
+    .grid-night {
+      max-width: 1440px;
+      margin: 2rem auto 5rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--grid-gap);
+    }
+
+    .night-card {
+      background: var(--surface);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      transition: var(--transition);
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+    .night-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent-glow);
+      box-shadow: var(--shadow-lg);
+    }
+    .night-media {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--surface-elevated);
+      filter: grayscale(20%);
+    }
+    .night-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .night-card:hover .night-media img {
+      transform: scale(1.05);
+      filter: grayscale(0%);
+    }
+    .night-quick {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 18, 25, 0.96);
+      backdrop-filter: blur(8px);
+      padding: 0.8rem;
+      opacity: 0;
+      transition: 0.2s;
+      text-align: center;
+    }
+    .night-card:hover .night-quick {
+      opacity: 1;
+    }
+    .night-quick button {
+      background: var(--accent);
+      border: none;
+      width: 85%;
+      padding: 0.55rem;
+      font-size: 0.55rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #0f1219;
+      font-family: monospace;
+      border-radius: 30px;
+    }
+    .night-quick button:hover {
+      background: white;
+      color: #1a1f2a;
+    }
+
+    .night-info {
+      padding: 1rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .night-detail h4 {
+      font-size: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--accent-glow);
+      letter-spacing: 2px;
+    }
+    .night-detail h3 {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 400;
+      margin-top: 5px;
+    }
+    .night-price {
+      text-align: right;
+    }
+    .night-current {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .night-old {
+      font-size: 0.65rem;
+      text-decoration: line-through;
+      color: var(--text-muted);
+      margin-left: 0.3rem;
+    }
+
+    /* cart — wither basket */
+    .cart-overlay-night {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0, 0, 0, 0.96);
+      backdrop-filter: blur(24px);
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+    .cart-overlay-night.active {
+      visibility: visible;
+      opacity: 1;
+    }
+    .cart-night-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      max-width: 520px;
+      height: 100vh;
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      box-shadow: var(--shadow-lg);
+      z-index: 2001;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-overlay-night.active .cart-night-panel {
+      transform: translateX(0);
+    }
+    .cart-night-header {
+      padding: 1.4rem;
+      border-bottom: 1px solid var(--accent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-night-header h3 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--accent-glow);
+      font-style: italic;
+    }
+    .close-night-cart {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .cart-night-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .night-cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.8rem;
+      background: var(--surface-elevated);
+      border-left: 3px solid var(--accent);
+      position: relative;
+      border-radius: 18px;
+    }
+    .night-cart-img {
+      width: 70px;
+      height: 85px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .night-cart-details {
+      flex: 1;
+    }
+    .night-cart-name {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+    .night-cart-price {
+      font-size: 0.7rem;
+      color: var(--accent-glow);
+      margin-top: 4px;
+    }
+    .night-cart-qty {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .night-qty-btn {
+      background: var(--accent-subtle);
+      border: none;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--text);
+      font-family: monospace;
+      border-radius: 30px;
+    }
+    .night-qty-btn:hover {
+      background: var(--accent);
+      color: #0f1219;
+    }
+    .night-remove {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .cart-night-footer {
+      padding: 1.5rem;
+      border-top: 2px solid var(--accent);
+      background: var(--surface);
+    }
+    .night-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      font-family: monospace;
+    }
+    .night-checkout {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      padding: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #05070a;
+      font-family: monospace;
+      border-radius: 40px;
+    }
+    .night-checkout:hover {
+      background: var(--accent-glow);
+      transform: scale(0.98);
+    }
+    .empty-night-cart {
+      text-align: center;
+      color: var(--text-soft);
+      padding: 2rem;
+      font-size: 0.7rem;
+      font-family: monospace;
+    }
+
+    footer {
+      background: var(--surface-elevated);
+      margin-top: 2rem;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid var(--accent);
+    }
+    .footer-night {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .footer-night-brand {
+      font-family: var(--font-serif);
+      font-size: 1.7rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--accent-glow);
+    }
+    .footer-night-regions {
+      font-size: 0.5rem;
+      letter-spacing: 3px;
+      color: var(--text-soft);
+      margin: 0.6rem 0 1rem;
+      font-family: monospace;
+    }
+
+    /* modal — wither threshold */
+    .modal-night {
+      position: fixed;
+      inset: 0;
+      z-index: 2200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.96);
+      backdrop-filter: blur(28px);
+      transition: opacity 0.25s;
+    }
+    .modal-night-block {
+      background: var(--surface);
+      max-width: 520px;
+      width: 100%;
+      border-top: 5px solid var(--accent);
+      padding: 2rem 2rem 2.2rem;
+      position: relative;
+      text-align: center;
+      box-shadow: 0 35px 45px rgba(0, 0, 0, 0.9);
+      border-radius: 48px 12px 48px 12px;
+    }
+    .modal-night-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .modal-night-icon {
+      width: 70px;
+      height: 70px;
+      background: rgba(122, 91, 110, 0.2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      border: 1px solid var(--accent);
+      color: var(--accent-glow);
+      border-radius: 50%;
+    }
+    .modal-night-title {
+      font-family: var(--font-serif);
+      font-size: 2.1rem;
+      font-weight: 300;
+      color: var(--accent-glow);
+      margin-bottom: 0.2rem;
+      font-style: italic;
+    }
+    .modal-night-desc {
+      color: var(--text-soft);
+      line-height: 1.45;
+      font-size: 0.8rem;
+      margin: 0.8rem 0;
+    }
+    .modal-night-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.6rem;
+    }
+    .btn-night-primary {
+      background: var(--accent);
+      border: none;
+      padding: 0.7rem 2rem;
+      font-weight: 600;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      color: #0a0c12;
+      font-family: monospace;
+      border-radius: 40px;
+    }
+    .btn-night-secondary {
+      background: transparent;
+      border: 1px solid var(--accent);
+      padding: 0.7rem 1.8rem;
+      font-weight: 500;
+      font-size: 0.7rem;
+      cursor: pointer;
+      color: var(--text);
+      font-family: monospace;
+      border-radius: 40px;
+    }
+    .modal-fade-night {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      display: none;
+    }
+
+    @media (max-width: 780px) {
+      .nav-wilt {
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .grid-night {
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- entry modal: NIGHTBLOOM invitation -->
+<div id="entryModalNight" class="modal-night">
+  <div class="modal-night-block">
+    <button id="closeNightModal" class="modal-night-close"><i class="fas fa-seedling"></i></button>
+    <div class="modal-night-icon"><i class="fas fa-leaf"></i></div>
+    <h2 class="modal-night-title">NIGHTBLOOM</h2>
+    <p class="modal-night-desc">Mercantile of withered flora · nocturnal dye · dried herbarium. Garments from shadow-botanical tinctures and midnight petals.</p>
+    <div class="modal-night-buttons">
+      <button id="enterNightBtn" class="btn-night-primary">🌙 ENTER THE THICKET</button>
+      <button id="laterNightBtn" class="btn-night-secondary">WAIT · DAWN</button>
+    </div>
+  </div>
+</div>
+
+<header class="night-header">
+  <div class="nav-wilt">
+    <div class="brand-night">NIGHTBLOOM<small>· MERCANTILE</small></div>
+    <nav class="nav-night-links">
+      <a href="#shopNight">WILT ARCHIVE</a>
+      <a href="#shopNight">NOCTURNAL DYE</a>
+      <a href="#shopNight">DRIED GOODS</a>
+      <a href="#">THORN VAULT</a>
+    </nav>
+    <div class="night-utils">
+      <button id="themeToggleNight">🌿 WILT MODE</button>
+      <div class="night-cart" id="cartIconNight">
+        <i class="fas fa-basket-shopping"></i>
+        <span class="cart-count-night" id="cartCountNight">0</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero-night">
+    <div class="hero-night-content">
+      <div class="hero-night-badge">WITHERED BOTANICALS · NOCTURNAL DYE</div>
+      <h1 class="hero-night-title">NIGHTBLOOM</h1>
+      <div class="hero-night-offer">first descent: <strong>15% off</strong> your first wilted artifact</div>
+      <a href="#shopNight" class="btn-night">ENTER THE THICKET →</a>
+    </div>
+  </section>
+
+  <div class="night-collection" id="shopNight">
+    <h2>Wilt Archive · Dried Herbarium & Nocturnal Dye</h2>
+    <p>12 shadow goods</p>
+  </div>
+
+  <div class="grid-night" id="productGridNight"></div>
+</main>
+
+<footer>
+  <div class="footer-night">
+    <div class="footer-night-brand">NIGHTBLOOM</div>
+    <div class="footer-night-regions">WITHERED MERCANTILE · NOCTURNAL DYE · DRIED HERBARIUM</div>
+    <p style="font-size:0.55rem; opacity:0.7;">© 2026 NIGHTBLOOM MERCANTILE — harvested from shadow & dried petals.</p>
+  </div>
+</footer>
+
+<!-- CART SIDEBAR -->
+<div id="cartOverlayNight" class="cart-overlay-night">
+  <div class="cart-night-panel">
+    <div class="cart-night-header">
+      <h3>🌿 WILT BASKET</h3>
+      <button class="close-night-cart" id="closeCartNight"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-night-items" id="cartItemsNight">
+      <div class="empty-night-cart">Your thicket is bare.<br>Add nocturnal goods.</div>
+    </div>
+    <div class="cart-night-footer" id="cartFooterNight" style="display: none;">
+      <div class="night-total"><span>Total (USD)</span><span id="cartTotalNight">$0</span></div>
+      <button class="night-checkout" id="checkoutNightBtn">🕯️ CONSECRATE WILT</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // NIGHTBLOOM product catalog — shadow botanical theme
+  const nightProducts = [
+    { id: 8801, name: "Nocturnal Cloak", category: "DYED", original: 899, price: 764, img: "https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?q=80&w=686&auto=format&fit=crop", alt: "cloak" },
+    { id: 8802, name: "Wilt Tunic", category: "HERB", original: 348, price: 295, img: "https://images.unsplash.com/photo-1584271854089-9bb3e5168e32?q=80&w=687&auto=format&fit=crop", alt: "tunic" },
+    { id: 8803, name: "Thornweave Shirt", category: "LAYER", original: 595, price: 505, img: "https://images.unsplash.com/photo-1611312449412-6cefac5dc3e4?q=80&w=692&auto=format&fit=crop", alt: "shirt" },
+    { id: 8804, name: "Nightbloom Pants", category: "BOTTOMS", original: 480, price: 408, img: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?q=80&w=687&auto=format&fit=crop", alt: "pants" },
+    { id: 8805, name: "Dried Anorak", category: "KNIT", original: 805, price: 684, img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=600&auto=format&fit=crop", alt: "anorak" },
+    { id: 8806, name: "Withered Vest", category: "VEST", original: 435, price: 369, img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=687&auto=format&fit=crop", alt: "vest" },
+    { id: 8807, name: "Botanical Smock", category: "SMOCK", original: 1090, price: 926, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=687&auto=format&fit=crop", alt: "smock" },
+    { id: 8808, name: "Nocturnal Coat", category: "COAT", original: 1455, price: 1236, img: "https://images.unsplash.com/photo-1598032895397-b9472444bf93?q=80&w=2070&auto=format&fit=crop", alt: "coat" },
+    { id: 8809, name: "Thorn Cargo", category: "BOTTOMS", original: 565, price: 480, img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=600&auto=format&fit=crop", alt: "cargo" },
+    { id: 8810, name: "Night Hood", category: "HOODIE", original: 370, price: 314, img: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=764&auto=format&fit=crop", alt: "hoodie" },
+    { id: 8811, name: "Wither Duster", category: "OUTER", original: 1870, price: 1589, img: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=688&auto=format&fit=crop", alt: "duster" },
+    { id: 8812, name: "Wilt Shacket", category: "SHIRT", original: 675, price: 573, img: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=687&auto=format&fit=crop", alt: "shacket" }
+  ];
+
+  let cartNight = [];
+  const cartOverlayNightDiv = document.getElementById('cartOverlayNight');
+  const cartNightIcon = document.getElementById('cartIconNight');
+  const closeCartNightBtn = document.getElementById('closeCartNight');
+  const cartNightContainer = document.getElementById('cartItemsNight');
+  const cartNightFooter = document.getElementById('cartFooterNight');
+  const cartNightTotalSpan = document.getElementById('cartTotalNight');
+  const cartNightCountSpan = document.getElementById('cartCountNight');
+
+  function persistNightCart() { localStorage.setItem('NIGHTBLOOM_CART', JSON.stringify(cartNight)); }
+  function loadNightCart() {
+    const saved = localStorage.getItem('NIGHTBLOOM_CART');
+    if (saved) cartNight = JSON.parse(saved);
+    renderNightCart();
+    updateNightCount();
+  }
+  function updateNightCount() { cartNightCountSpan.innerText = cartNight.reduce((sum,i)=>sum+i.qty,0); }
+
+  function renderNightCart() {
+    if (!cartNightContainer) return;
+    if (cartNight.length === 0) {
+      cartNightContainer.innerHTML = '<div class="empty-night-cart">Your thicket is bare.<br>Add nocturnal goods.</div>';
+      cartNightFooter.style.display = 'none';
+      updateNightCount(); persistNightCart(); return;
+    }
+    cartNightFooter.style.display = 'block';
+    let html = ''; let total = 0;
+    cartNight.forEach(item => {
+      total += item.price * item.qty;
+      html += `<div class="night-cart-item" data-id="${item.id}">
+          <img class="night-cart-img" src="${item.img}" alt="${item.name}">
+          <div class="night-cart-details">
+            <div class="night-cart-name">${item.name}</div>
+            <div class="night-cart-price">$${item.price.toLocaleString()}</div>
+            <div class="night-cart-qty">
+              <button class="night-qty-dec" data-id="${item.id}">−</button>
+              <span>${item.qty}</span>
+              <button class="night-qty-inc" data-id="${item.id}">+</button>
+            </div>
+          </div>
+          <button class="night-remove" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+        </div>`;
+    });
+    cartNightContainer.innerHTML = html;
+    cartNightTotalSpan.innerText = `$${total.toLocaleString()}`;
+    document.querySelectorAll('.night-qty-dec').forEach(btn => btn.addEventListener('click', () => updateNightQty(parseInt(btn.dataset.id), -1)));
+    document.querySelectorAll('.night-qty-inc').forEach(btn => btn.addEventListener('click', () => updateNightQty(parseInt(btn.dataset.id), 1)));
+    document.querySelectorAll('.night-remove').forEach(btn => btn.addEventListener('click', () => removeNightItem(parseInt(btn.dataset.id))));
+    updateNightCount(); persistNightCart();
+  }
+  function updateNightQty(pid, delta) {
+    const idx = cartNight.findIndex(i=>i.id===pid);
+    if(idx !== -1){
+      const nq = cartNight[idx].qty + delta;
+      if(nq <= 0) cartNight.splice(idx,1);
+      else cartNight[idx].qty = nq;
+      renderNightCart();
+    }
+  }
+  function removeNightItem(pid){ cartNight = cartNight.filter(i=>i.id!==pid); renderNightCart(); }
+  function addToNightCart(pid){
+    const prod = nightProducts.find(p=>p.id===pid);
+    if(!prod) return;
+    const existing = cartNight.find(i=>i.id===pid);
+    if(existing) existing.qty += 1;
+    else cartNight.push({id:prod.id, name:prod.name, price:prod.price, qty:1, img:prod.img});
+    renderNightCart();
+    const btn = document.querySelector(`.night-add-${pid}`);
+    if(btn){ let old = btn.innerText; btn.innerText="🌙 WITHERED"; setTimeout(()=>btn.innerText=old,700); }
+    cartOverlayNightDiv.classList.add('active');
+  }
+
+  function renderNightProducts() {
+    const container = document.getElementById('productGridNight');
+    if(!container) return;
+    container.innerHTML = '';
+    nightProducts.forEach(p => {
+      const disc = Math.round(((p.original-p.price)/p.original)*100);
+      const card = document.createElement('div');
+      card.className = 'night-card';
+      card.innerHTML = `
+        <div class="night-media">
+          <img src="${p.img}" alt="${p.alt||p.name}" loading="lazy">
+          <div class="night-quick"><button class="night-add-${p.id} add-night-btn" data-id="${p.id}">🌿 ADD TO BASKET</button></div>
+        </div>
+        <div class="night-info">
+          <div class="night-detail"><h4>${p.category}</h4><h3>${p.name}</h3></div>
+          <div class="night-price"><span class="night-current">$${p.price.toLocaleString()}</span><span class="night-old">$${p.original.toLocaleString()}</span><span style="font-size:0.55rem;color:var(--accent-glow);display:block;text-align:right;">-${disc}%</span></div>
+        </div>`;
+      container.appendChild(card);
+    });
+    document.querySelectorAll('.add-night-btn').forEach(btn => btn.addEventListener('click', (e)=>{ e.preventDefault(); addToNightCart(parseInt(btn.dataset.id)); }));
+  }
+
+  function initThemeNight() {
+    const stored = localStorage.getItem('NIGHTBLOOM_theme');
+    let theme = stored || 'noir';
+    document.documentElement.setAttribute('data-theme', theme);
+    const toggle = document.getElementById('themeToggleNight');
+    if(toggle) toggle.textContent = theme === 'noir' ? '🌿 WILT MODE' : '🌙 NOIR MODE';
+  }
+  function toggleThemeNight() {
+    const curr = document.documentElement.getAttribute('data-theme');
+    const next = curr === 'noir' ? 'wilt' : 'noir';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('NIGHTBLOOM_theme', next);
+    const toggleBtn = document.getElementById('themeToggleNight');
+    if(toggleBtn) toggleBtn.textContent = next === 'noir' ? '🌿 WILT MODE' : '🌙 NOIR MODE';
+  }
+
+  // modal handlers
+  const modalNightElem = document.getElementById('entryModalNight');
+  const enterNight = document.getElementById('enterNightBtn'), laterNight = document.getElementById('laterNightBtn'), closeNightModalBtn = document.getElementById('closeNightModal');
+  function closeNightModalFunc() {
+    if(modalNightElem){
+      modalNightElem.classList.add('modal-fade-night');
+      setTimeout(()=>modalNightElem.style.display='none',200);
+    }
+  }
+  if(enterNight) enterNight.addEventListener('click', closeNightModalFunc);
+  if(laterNight) laterNight.addEventListener('click', closeNightModalFunc);
+  if(closeNightModalBtn) closeNightModalBtn.addEventListener('click', closeNightModalFunc);
+  if(modalNightElem) modalNightElem.addEventListener('click',(e)=>{ if(e.target===modalNightElem) closeNightModalFunc(); });
+
+  cartNightIcon?.addEventListener('click',()=>cartOverlayNightDiv.classList.add('active'));
+  closeCartNightBtn?.addEventListener('click',()=>cartOverlayNightDiv.classList.remove('active'));
+  cartOverlayNightDiv?.addEventListener('click',(e)=>{ if(e.target===cartOverlayNightDiv) cartOverlayNightDiv.classList.remove('active'); });
+  document.getElementById('checkoutNightBtn')?.addEventListener('click',()=>{ alert('Nightbloom seals your wilted offering. Your nocturnal order is bound in dried petals and shadow.'); cartNight=[]; renderNightCart(); cartOverlayNightDiv.classList.remove('active'); });
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{ a.addEventListener('click',function(e){ const hash=this.getAttribute('href'); if(hash==="#") return; const sec=document.querySelector(hash); if(sec){ e.preventDefault(); sec.scrollIntoView({behavior:'smooth'}); } }); });
+
+  renderNightProducts();
+  initThemeNight();
+  loadNightCart();
+  document.getElementById('themeToggleNight')?.addEventListener('click', toggleThemeNight);
+</script>
+</body>
+</html>
